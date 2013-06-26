@@ -10,6 +10,7 @@
 ** V2.0 - 2013-05-10 - 	Refonte du script initial, correction de bugs, intégration de la création du fichier XML.
 ** V2.1 - 2013-05-23 - 	Possibilité de choisir l'affichage ou la génération d'un fichier XML. 
 **						Pour afficher le XML, ajouter le paramètre d à 1 à l'URL (index.php?d=1)
+** V2.2 - 2013-06-26 - Externalisation des données dans un fichier séparé. Ajout des DOM et TOM
 **************************************************************************************/
 
 // Indiquer ici le chemin relatif ainsi que le nom du fichier du XML
@@ -17,19 +18,12 @@ $fichierXML = "./carte_vigilance_meteo.xml";
 
 // ******** Ne rien modifier ci-dessous ********
 require_once('vigilancemeteo_class.php');
+require_once('donnees.php');
 
-$couleur = array('Indéterminée','Verte','Jaune','Orange','Rouge');
-$boucle_corse = false;
-
-$indexURL = "http://www.vigimeteo.com/vigilance_secours/Bulletin_sans.html?a=dept";
-$imgURL = "http://france.meteofrance.com/generated/integration/img/vigilance/fr.gif";
-$periodeURL = "http://france.meteofrance.com/france/meteo?PREVISIONS_PORTLET.path=previsionsdept/DEPT2A";
-
+$couleur = array('Bleu','Vert','Jaune','Orange','Rouge','Violet','Gris');
+							
 if ((isset ($_GET['d'])) && (($_GET['d'] == 1) || ($_GET['d'] == 0)))
 	$display = $_GET['d'];
-
-//Nouvelle instance de la classe vigilancemeteo
-$meteo = new vigilancemeteo($imgURL);
 
 // Création fichier XML avec les données
 // Instance de la class DomDocument
@@ -41,7 +35,7 @@ $doc->encoding = 'UTF-8';
 $doc->formatOutput = true;
 
 // Ajout d'un commentaire a la racine
-$comment_elt = $doc->createComment(utf8_encode('Carte de vigilance des départements français'));
+$comment_elt = $doc->createComment(utf8_encode('Carte de vigilance des départements (métropole et outre-mer) et territoires d\'outre-mer français'));
 $doc->appendChild($comment_elt);
 
 $racine = $doc->createElement('vigilance');
@@ -50,32 +44,29 @@ $racine = $doc->createElement('vigilance');
 $version_elt = $doc->createElement('update',date("Y-m-d H:i"));
 $racine->appendChild($version_elt);
 
-//Boucle sur tous les départements français, ajout par la suite de l'Andorre
-for ($dept=1; $dept<=99; $dept++)
+foreach ($donnees_vigilance as $region)
 {
-	if (($dept < 96) || ($dept > 98))
+	//Nouvelle instance de la classe vigilancemeteo
+	$meteo = new VigilanceMeteo($region);
+
+	//On récupère les différentes couleurs possibles pour cette carte
+	$couleurs = $meteo->getColours($region["colours"]);
+	
+	//Boucle sur tous les départements de la liste
+	foreach ($region["depts"] as $dept)
 	{
 		//Ajout du 0 significatif aux numéros de départements < 10
 		$dept = str_pad($dept, 2, "0", STR_PAD_LEFT);
 		
-		//On renumérote les 2 départements corses
-		if ($dept == 20)
-		{
-			if ($boucle_corse === false)
-			{
-				$dept = "2A";
-				$boucle_corse = true;
-			}
-			else
-				$dept = "2B";
-		}
-		
-		$niveau = $meteo->alertMe($dept);	
+		$niveau = $meteo->alertMe($dept);
 
 		//Nouvel essai
-		if ($niveau == 0)
+		if ($niveau == false)
 			$niveau = $meteo->alertMe($dept);
-			
+		
+		if ($niveau == false)
+			$niveau = 0;
+
 		$dept_elt = $doc->createElement('dep_'.$dept);
 		$dept_niveau_elt = $doc->createElement('niveau', $niveau);
 		$dept_couleur_elt = $doc->createElement('alerte', utf8_encode($couleur[$niveau]));
@@ -83,13 +74,10 @@ for ($dept=1; $dept<=99; $dept++)
 		$dept_elt->appendChild($dept_niveau_elt);
 		$dept_elt->appendChild($dept_couleur_elt);
 		$racine->appendChild($dept_elt);
-
-		// On refait un passage pour la Haute-Corse
-		if ($dept == "2A")
-			$dept = 19;
-		if ($dept == "2B")
-			$dept = 20;
 	}
+	
+	// On efface les images dans le cache
+	$meteo->effaceimages();
 }
 
 $doc->appendChild($racine);
