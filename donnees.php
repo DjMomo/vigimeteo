@@ -112,6 +112,7 @@ $donnees_vigilance = array (
 										"URL" => "http://france.meteofrance.com/generated/integration/img/vigilance/fr.gif",
 										"colours" => array (
 														"URL" => "http://france.meteofrance.com/generated/integration/img/vigilance/fr.gif",
+														"tolerance" => 0,
 														"vert" => array("x" => 23,"y" => 231),
 														"jaune" => array("x" => 23,"y" => 186),
 														"orange" => array("x" => 23,"y" => 141),
@@ -133,6 +134,7 @@ $donnees_vigilance = array (
 										"URL" => "http://www.meteo.gp/donnees/bulletin/vigilance/vigilance_web.png",
 										"colours" => array (
 														"URL" => "http://www.meteo.gp/donnees/bulletin/vigilance/legend.png",
+														"tolerance" => 15,
 														"bleu" => array("x" => 27,"y" => 205),
 														"vert" => array("x" => 27,"y" => 252),
 														"jaune" => array("x" => 27,"y" => 299),

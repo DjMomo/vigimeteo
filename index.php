@@ -6,11 +6,7 @@
 **												
 ** V1 - DjMaboul - http://www.touteladomotique.com/forum/viewtopic.php?f=72&t=1724
 **						
-** V2.x - DjMomo - http://www.planete-domotique.com/blog/2013/05/11/la-vigilance-meteo-dans-votre-eedomus/
-** V2.0 - 2013-05-10 - 	Refonte du script initial, correction de bugs, intégration de la création du fichier XML.
-** V2.1 - 2013-05-23 - 	Possibilité de choisir l'affichage ou la génération d'un fichier XML. 
-**						Pour afficher le XML, ajouter le paramètre d à 1 à l'URL (index.php?d=1)
-** V2.2 - 2013-06-26 - Externalisation des données dans un fichier séparé. Ajout des DOM et TOM
+** Version ultérieures - DjMomo - Voir Readme.md
 **************************************************************************************/
 
 // Indiquer ici le chemin relatif ainsi que le nom du fichier du XML
@@ -66,7 +62,7 @@ foreach ($donnees_vigilance as $region)
 		
 		if ($niveau == false)
 			$niveau = 0;
-
+			
 		$dept_elt = $doc->createElement('dep_'.$dept);
 		$dept_niveau_elt = $doc->createElement('niveau', $niveau);
 		$dept_couleur_elt = $doc->createElement('alerte', utf8_encode($couleur[$niveau]));

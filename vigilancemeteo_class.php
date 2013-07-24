@@ -2,16 +2,18 @@
 
   // vigilancemeteo_class.php
   
-class vigilanceMeteo {
+class VigilanceMeteo {
 
 	var $img;
 	var $legend;
 	var $couleurs;
+	var $tolerance;
 
 	function VigilanceMeteo($region) 
 	{
 		$this->legend = $this->createimage($region["colours"]["URL"]);
 		$this->img = $this->createimage($region["URL"]);
+		$this->tolerance = $region["colours"]["tolerance"];
 	}
 	
 	function effaceimages()
@@ -88,7 +90,8 @@ class vigilanceMeteo {
 		return $tab;
 	}
 
-	function getRectangle($dept) {
+	function getRectangle($dept) 
+	{
 		$tab = $this->getPolygone($dept);
 	
 		// Recherche xmin et xmax
@@ -112,45 +115,49 @@ class vigilanceMeteo {
 	function alertMe($dept) 
 	{
 		$alertMe = false;
-	
+
 		if ($this->img_ok == true) 
 		{
 			list($xmin,$ymin,$xmax,$ymax) = $this->getRectangle($dept);
-			
+
 			// On recherche une des couleurs prédéfinies
 			// Sens horizontal de recherche
-			$x = $xmin + ($xmax-$xmin) / 2;
-			$y = $ymin + ($ymax-$ymin) / 2;
-			
+			$x = round($xmin + ($xmax-$xmin) / 2);
+			$y = round($ymin + ($ymax-$ymin) / 2);
+
 			while (($x <= $xmax) && ($alertMe == false))
 			{
 				$color_index = imagecolorat($this->img,$x,$y);
 				$colors = imagecolorsforindex($this->img, $color_index);
+
 				foreach ($this->couleurs as $index_couleur)
 				{
-					if (($this->compareColors ($color_index, $index_couleur,15) == true) && ($alertMe == false))
+					if (($this->compareColors ($color_index, $index_couleur,$this->tolerance) == true) && ($alertMe == false))
 					{
 						$position = array_keys($this->couleurs, $index_couleur);
 						$alertMe = $position[0];
+						return  $alertMe;
 					}
 				}
 				$x++;
 			}
 			
 			// Sens vertical de recherche
-			$x = $xmin + ($xmax-$xmin) / 2;
-			$y = $ymin + ($ymax-$ymin) / 2;
-			
+			$x = round($xmin + ($xmax-$xmin) / 2);
+			$y = round($ymin + ($ymax-$ymin) / 2);
+
 			while (($y <= $ymax) && ($alertMe == false))
 			{
 				$color_index = imagecolorat($this->img,$x,$y);
 				$colors = imagecolorsforindex($this->img, $color_index);
+
 				foreach ($this->couleurs as $index_couleur)
 				{
-					if (($this->compareColors ($color_index, $index_couleur,15) == true) && ($alertMe == false))
+					if (($this->compareColors ($color_index, $index_couleur,$this->tolerance) == true) && ($alertMe == false))
 					{
 						$position = array_keys($this->couleurs, $index_couleur);
 						$alertMe = $position[0];
+						return  $alertMe;
 					}
 				}
 				$y++;
@@ -158,7 +165,6 @@ class vigilanceMeteo {
 			
 			if ($alertMe == false)
 				$alertMe = 0;
-						
 		}
 		else
 			echo "Impossible de charger l'image";
