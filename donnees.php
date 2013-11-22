@@ -1,8 +1,8 @@
 <?php
 
-// Coordonnées des points des départements sur les cartes de vigilance
+// Coordonnï¿½es des points des dï¿½partements sur les cartes de vigilance
 $coordonnees = array (
-				// Départements métropolitains + Andorre
+				// Dï¿½partements mï¿½tropolitains + Andorre
 					'01' => "607,241,610,245,603,257,604,264,598,283,587,272,583,277,572,277,567,269,567,258,572,245,578,240,591,251,600,251,606,241",
 					'02' => "537,80,504,80,506,107,500,113,506,126,518,135,524,127,522,114,538,106,534,99,538,94,536,79",
 					'03' => "538,278,538,263,543,260,544,251,536,238,529,241,515,236,501,240,497,251,487,254,499,271,507,265,532,270,537,279",
@@ -95,9 +95,9 @@ $coordonnees = array (
 					'89' => "505,173,507,162,518,162,539,182,549,180,551,183,555,187,545,212,536,206,525,201,518,205,508,200,502,194,506,192,509,174,504,172",
 					'90' => "644,192,628,177,626,182,629,188,634,193,645,191",
 					'91' => "489,142,477,143,471,158,473,168,486,163,489,156,489,141",
-					'92' => "477,136,490,131,489,145,477,146,478,136", //Même carte que Paris
-					'93' => "477,136,490,131,489,145,477,146,478,136", //Même carte que Paris
-					'94' => "477,136,490,131,489,145,477,146,478,136", //Même carte que Paris
+					'92' => "477,136,490,131,489,145,477,146,478,136", //Mï¿½me carte que Paris
+					'93' => "477,136,490,131,489,145,477,146,478,136", //Mï¿½me carte que Paris
+					'94' => "477,136,490,131,489,145,477,146,478,136", //Mï¿½me carte que Paris
 					'95' => "464,123,463,130,480,135,495,131,484,125,464,122",
 					'99' => "474,459,486,463,476,472,471,470,469,464,474,459", //Andorre
 					'971' => "281,228,285,248,290,256,301,251,298,235,307,237,331,233,316,225,314,215,309,212,303,216,306,224,299,229,287,223",
@@ -109,9 +109,9 @@ $coordonnees = array (
 
 $donnees_vigilance = array ( 	
 						"metropole" => array (
-										"URL" => "http://france.meteofrance.com/generated/integration/img/vigilance/fr.gif",
+										"URL" => "http://vigilance.meteofrance.com/data/QGFR17_LFPW_.gif",
 										"colours" => array (
-														"URL" => "http://france.meteofrance.com/generated/integration/img/vigilance/fr.gif",
+														"URL" => "http://vigilance.meteofrance.com/data/QGFR17_LFPW_.gif",
 														"tolerance" => 0,
 														"vert" => array("x" => 23,"y" => 231),
 														"jaune" => array("x" => 23,"y" => 186),
