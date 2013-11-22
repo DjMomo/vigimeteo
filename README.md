@@ -7,6 +7,8 @@ https://github.com/DjMomo/vigimeteo
 
 ==========
 
+2013-11-21 - V1.4 - Correction d'un bug lié à un changement d'URL
+
 2013-07-24 - V1.3 - Correction d'un bug qui retournait par moments la mauvaise couleur de la carte de vigilance
 
 2013-06-26 - V1.2 - Externalisation des données dans un fichier séparé. Ajout des départements des Antilles (971,972,973,977,978)
