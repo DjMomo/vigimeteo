@@ -1,15 +1,15 @@
 <?php
 
-  // vigilancemeteo_class.php
+/*************************************************************************************
+**												
+** Classe PHP VigilanceMeteo
+**												
+** Toutes versions - DjMomo - Voir Readme.md
+**
+**************************************************************************************/
   
-class VigilanceMeteo {
-
-	var $img;
-	var $legend;
-	var $couleurs;
-	var $tolerance;
-
-	
+class VigilanceMeteo 
+{
 	private $OUTPUT_FORMAT;
 	private $XML_COMMENT;
 	private $DATA = array();
@@ -19,8 +19,7 @@ class VigilanceMeteo {
 	private $METEO_TXT_UPDATE_URL;	// Antilles
 	private $METEO_TXT_DATA_URL;	// Antilles
 	private $DOM;
-	
-	
+		
 	public function __construct($output_format = "XML", $entete_XML = "")
 	{
 		spl_autoload_register(array($this,"autoloader"));
