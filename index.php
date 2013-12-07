@@ -10,17 +10,22 @@
 **
 **************************************************************************************/
 
+$fichierXML = "carte_vigilance_meteo.xml";
+
 require("VigilanceMeteo.class.php");
 
-if (isset ($_GET['json']))
+// Choix entre affichage ou sauvegarde
+$_GET_lower = array_change_key_case($_GET, CASE_LOWER);
+if (isset ($_GET_lower['json']))
 	$format = "json";
-else
+elseif (isset ($_GET_lower['xml']))
 	$format = "xml";
+else
+	$fichier = $fichierXML;
 
 $meteo = new VigilanceMeteo($format,"Etats de vigilance météorologique des départements (métropole et outre-mer) et territoires d'outre-mer français");
-// Affiche les données au format choisi (JSON ou XML)
-$meteo->DonneesVigilance();
-// Pour sauvegarder dans un fichier XML :
-// $meteo->DonneesVigilance("nom_du_fichier.xml");
+$meteo->DonneesVigilance($fichier);
+
+// Et c'est tout !
 
 ?>
