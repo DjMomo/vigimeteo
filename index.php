@@ -13,6 +13,7 @@
 $fichierXML = "carte_vigilance_meteo.xml";
 
 require("VigilanceMeteo.class.php");
+$fichier = false;
 
 // Choix entre affichage ou sauvegarde
 $_GET_lower = array_change_key_case($_GET, CASE_LOWER);
