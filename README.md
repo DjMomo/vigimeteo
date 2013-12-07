@@ -1,11 +1,17 @@
 eedomus-vigimeteo
 =================
 
-A PHP class to retrieve vigilance meteo levels in France
+Une classe PHP pour obtenir les niveaux de vigilance météo en France
 
 https://github.com/DjMomo/vigimeteo
 
 ==========
+
+2013-08-12 - V2.0 - Evolution majeure
+- Nouveau mode de traitement des données météo (traitement de données texte plutôt que de parser une image). Entraine un temps d'exécution divisé par 2 par rapport à la précédente version,
+- Réécriture de toute la classe PHP,
+- Possibilité de récupérer les données au format JSON (XML par défaut),
+- Script plus léger (plus de fichier donnees.php désormais obsolète).
 
 2013-11-21 - V1.4 - Correction d'un bug lié à un changement d'URL
 
@@ -22,13 +28,16 @@ Refonte du script initial, correction de bugs, intégration de la création du f
 ==========
 Configuration :
 
--- None --
+-- Aucune --
 
 ==========
-How to use :
+Utilisation :
 
-Generate an XML file "carte_vigilance_meteo.xml" :
+Afficher les données au format XML :
+> http://IP/index.php?xml
+
+Afficher les données au format JSON :
+> http://IP/index.php?json
+
+Sauvegarder les données au format XML dans le fichier "carte_vigilance_meteo.xml" :
 > http://IP/index.php
-
-Display all datas in XML format :
-> http://IP/index.php?d=1
