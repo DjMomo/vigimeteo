@@ -10,7 +10,7 @@
 **
 **************************************************************************************/
 
-require("vigilancemeteo.class.php");
+require("VigilanceMeteo.class.php");
 
 if (isset ($_GET['json']))
 	$format = "json";
