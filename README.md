@@ -1,4 +1,4 @@
-eedomus-vigimeteo
+VigilanceMeteo
 =================
 
 Une classe PHP pour obtenir les niveaux de vigilance météo en France
