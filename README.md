@@ -8,7 +8,7 @@ https://github.com/DjMomo/vigimeteo
 ==========
 
 2013-08-12 - V2.1 - Etats de vigilance pour les côtes métropolitaines désormais disponibles :
-Pour les départements côtiers métropolitains, disponibilité des états de vigilance "Vagues/submersion". Accessibles dans le JSON et/ou le XML via la balise "cote_XX" ou XX représente le numéro du dpéartement côtier concerné (2A, 06, 40, 59, etc...)
+Pour les départements côtiers métropolitains, disponibilité des états de vigilance "Vagues/submersion". Accessibles dans le JSON et/ou le XML via la balise "cote_XX" ou XX représente le numéro du département côtier concerné (2A, 06, 40, 59, etc...)
 
 2013-08-12 - V2.0 - Evolution majeure
 - Nouveau mode de traitement des données météo (traitement de données texte plutôt que de parser une image). Entraine un temps d'exécution divisé par 2 par rapport à la précédente version,
