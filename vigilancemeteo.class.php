@@ -124,16 +124,28 @@ class VigilanceMeteo
 		
 		foreach ($xml->datavigilance as $line)
 		{	
-			if ($this->Filter($line) !== false)
+			$type = $this->Filter($line);
+			if (strcasecmp($type,"dep") == 0)
 			{
 				$dep = $this->ToUTF8("dep_".$line['dep']);
-				$this->DATA[$dep] = array (
-										$this->ToUTF8("niveau") => $this->ToUTF8($line['couleur']), 
-										$this->ToUTF8("alerte") => $this->ToUTF8($this->ConvertLevelToColor($line['couleur']))
-										);
+				$this->AddData($dep,$line);
+			}
+			if (strcasecmp($type,"cote") == 0)
+			{
+				$dep = $this->ToUTF8("cote_".substr($line['dep'],0,2));
+				$this->AddData($dep,$line);
 			}
 		}
 		$this->CreateHeader("metropole",$xml->entetevigilance);
+	}
+	
+	private function AddData($dep,$data)
+	{
+		$this->DATA[$dep] = array (
+							$this->ToUTF8("niveau") => $this->ToUTF8($data['couleur']), 
+							$this->ToUTF8("alerte") => $this->ToUTF8($this->ConvertLevelToColor($data['couleur']))
+									);
+	
 	}
 	
 	private function AntillesDataFormat()
@@ -195,9 +207,11 @@ class VigilanceMeteo
 	
 	private function Filter($data)
 	{
-		// Filtrage des données parasites (depts 99, 2A10, 4010, 3110, etc..) du fichier source de métropole
-		if ((strlen ($data['dep']) == 2) && ($data['dep'] < 96)) 
-			return $data['dep'];
+		// Filtrage des données (depts 99, 2A10, 4010, 3310, etc..) du fichier source de métropole
+		if (((strlen ($data['dep']) == 2) && ($data['dep'] < 96)) || ($data['dep'] == 99)) 
+			return 'dep';
+		if ((strlen($data['dep']) == 4) && (strcasecmp(substr($data['dep'],-2),"10") == 0))
+			return 'cote';
 		return false;
 	}
 	
