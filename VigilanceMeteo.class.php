@@ -15,7 +15,7 @@ class VigilanceMeteo
 	private $DATA = array();
 	private $HEADER = array();
 	private $UPDATE;
-	private $METEO_XML_DATA_URL;	// Métropole
+	private $METEO_XML_DATA_URL;	// Mï¿½tropole
 	private $METEO_TXT_UPDATE_URL;	// Antilles
 	private $METEO_TXT_DATA_URL;	// Antilles
 	private $DOM;
@@ -42,19 +42,19 @@ class VigilanceMeteo
 	
     private function GetData($url)
 	{
-		// Récupère le contenu du fichier source des données
+		// Rï¿½cupï¿½re le contenu du fichier source des donnï¿½es
 		return file_get_contents($url);
 	}
 	
 	public function DonneesVigilance($file = false)
 	{
 		//
-		// Données de métropole
+		// Donnï¿½es de mï¿½tropole
 		//
 		$this->MetropoleDataFormat();
 		
 		//
-		// Données des Antilles
+		// Donnï¿½es des Antilles
 		//
 		$this->AntillesDataFormat();
 				
@@ -73,7 +73,7 @@ class VigilanceMeteo
 	
 	private function SortAndMergeHeaderAndData()
 	{
-		// Fusion des tableaux entete et données après tri du tableau des données
+		// Fusion des tableaux entete et donnï¿½es aprï¿½s tri du tableau des donnï¿½es
 		$this->DataSort();
 		$this->DATA = (array_merge($this->UPDATE,$this->HEADER,$this->DATA));
 	}
@@ -119,7 +119,7 @@ class VigilanceMeteo
 	
 	private function MetropoleDataFormat()
 	{
-		// Lit et met en forme les données pour le format de sortie
+		// Lit et met en forme les donnï¿½es pour le format de sortie
 		$xml = new SimpleXMLElement($this->GetData($this->METEO_XML_DATA_URL));
 		
 		foreach ($xml->datavigilance as $line)
@@ -150,7 +150,7 @@ class VigilanceMeteo
 	
 	private function AntillesDataFormat()
 	{
-		// Lit et met en forme les données des Antilles pour le format de sortie
+		// Lit et met en forme les donnï¿½es des Antilles pour le format de sortie
 		$txt = $this->GetData($this->METEO_TXT_DATA_URL);
 		$txt = eregi_replace("[ ]+", " ", $txt);	// Suppression des espaces inutiles
 		
@@ -170,7 +170,7 @@ class VigilanceMeteo
 			}
 		}
 	
-		// Recopie du 978 car mêmes données que le 977
+		// Recopie du 978 car mï¿½mes donnï¿½es que le 977
 		$dep = $this->ToUTF8("dep_978");
 		$dep_ini = $this->ToUTF8("dep_977");
 		$arr = $this->DATA[$dep_ini];
@@ -207,7 +207,7 @@ class VigilanceMeteo
 	
 	private function Filter($data)
 	{
-		// Filtrage des données (depts 99, 2A10, 4010, 3310, etc..) du fichier source de métropole
+		// Filtrage des donnï¿½es (depts 99, 2A10, 4010, 3310, etc..) du fichier source de mï¿½tropole
 		if (((strlen ($data['dep']) == 2) && ($data['dep'] < 96)) || ($data['dep'] == 99)) 
 			return 'dep';
 		if ((strlen($data['dep']) == 4) && (strcasecmp(substr($data['dep'],-2),"10") == 0))
@@ -222,7 +222,7 @@ class VigilanceMeteo
 	
 	private function OuputEncode()
 	{
-		// Fonction qui retourne les données au format choisi
+		// Fonction qui retourne les donnï¿½es au format choisi
 		if (strcasecmp($this->OUTPUT_FORMAT,"XML") == 0)
 			return $this->OutputEncodeXML();		// Format XML
 		
@@ -234,7 +234,7 @@ class VigilanceMeteo
 	
 	private function OutputEncodeXML($file = false)
 	{
-		// Fonction d'encodage en XML à partir de la classe XmlDomConstruct
+		// Fonction d'encodage en XML ï¿½ partir de la classe XmlDomConstruct
 		$this->DOM = new XmlDomConstruct('1.0', 'utf-8');
 		$this->DOM->formatOutput = true;
 		$comment_elt = $this->DOM->createComment($this->ToUTF8($this->XML_COMMENT));
