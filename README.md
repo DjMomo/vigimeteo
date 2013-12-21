@@ -7,6 +7,8 @@ https://github.com/DjMomo/vigimeteo
 
 ==========
 
+2013-12-21 - V2.2 - Evolution liée à PHP 5.3
+
 2013-12-08 - V2.1 - Etats de vigilance pour les côtes métropolitaines désormais disponibles :
 Pour les départements côtiers métropolitains, disponibilité des états de vigilance "Vagues/submersion". Accessibles dans le JSON et/ou le XML via la balise "cote_XX" ou XX représente le numéro du département côtier concerné (2A, 06, 40, 59, etc...)
 
