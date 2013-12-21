@@ -152,7 +152,7 @@ class VigilanceMeteo
 	{
 		// Lit et met en forme les donn�es des Antilles pour le format de sortie
 		$txt = $this->GetData($this->METEO_TXT_DATA_URL);
-		$txt = eregi_replace("[ ]+", " ", $txt);	// Suppression des espaces inutiles
+		$txt = preg_replace("#( +)#", " ", trim($txt)); // Suppression des espaces inutiles
 		
 		$data = explode(PHP_EOL,$txt);
 		
