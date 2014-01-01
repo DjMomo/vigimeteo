@@ -19,6 +19,8 @@ class VigilanceMeteo
 	private $METEO_TXT_UPDATE_URL;	// Antilles
 	private $METEO_TXT_DATA_URL;	// Antilles
 	private $DOM;
+	private $RISQUE = array("","vent","pluie-inondation","orages","inondations","neige-verglas","canicule","grand-froid","avalanches","vagues-submersion","crues");
+	private $DEP;
 		
 	public function __construct($output_format = "XML", $entete_XML = "")
 	{
@@ -29,6 +31,7 @@ class VigilanceMeteo
 		$this->METEO_XML_DATA_URL = "http://vigilance.meteofrance.com/data/NXFR34_LFPW_.xml";
 		$this->METEO_TXT_UPDATE_URL = "http://www.meteo.gp/donnees/pics/date_vigi.txt";
 		$this->METEO_TXT_DATA_URL = "http://www.meteo.gp/donnees/pics/RSS_couleurs.txt";
+		$this->METEO_XML_DETAILS_URL = "WXML%DEPT%_LFPW_.xml";//"http://www.vigimeteo.com/data/WXML%DEPT%_LFPW_.xml";
 		
 		$update = $this->ToUTF8("update");
 		$updateval = $this->ToUTF8(date("d-m-Y H:i"));
@@ -127,25 +130,59 @@ class VigilanceMeteo
 			$type = $this->Filter($line);
 			if (strcasecmp($type,"dep") == 0)
 			{
-				$dep = $this->ToUTF8("dep_".$line['dep']);
-				$this->AddData($dep,$line);
+				$this->DEP = $this->ToUTF8("dep_".$line['dep']);
+				$this->AddData($line);
 			}
 			if (strcasecmp($type,"cote") == 0)
 			{
-				$dep = $this->ToUTF8("cote_".substr($line['dep'],0,2));
-				$this->AddData($dep,$line);
+				$this->DEP = $this->ToUTF8("cote_".substr($line['dep'],0,2));
+				$this->AddData($line);
 			}
 		}
 		$this->CreateHeader("metropole",$xml->entetevigilance);
 	}
 	
-	private function AddData($dep,$data)
+	private function AddData($data)
 	{
-		$this->DATA[$dep] = array (
-							$this->ToUTF8("niveau") => $this->ToUTF8($data['couleur']), 
-							$this->ToUTF8("alerte") => $this->ToUTF8($this->ConvertLevelToColor($data['couleur']))
+		$NiveauMax = $this->NiveauMax($data);
+		if ($NiveauMax > 2) 
+		{
+			$risque = $this->RisqueConcat($data->risque["valeur"], $this->DATA[$this->DEP]["risque"]);
+			if (isset ($data->crue["valeur"]))
+				$risque = $this->RisqueConcat((int)$data->crue["valeur"]+10, $risque);
+		}
+		else		
+			$risque = "RAS"; 
+			
+		$this->DATA[$this->DEP] = array (
+							$this->ToUTF8("niveau") => $this->ToUTF8($NiveauMax), 
+							$this->ToUTF8("alerte") => $this->ToUTF8($this->ConvertLevelToColor($NiveauMax)),
+							$this->ToUTF8("risque") => $this->ToUTF8($risque),
 									);
+	}
 	
+	private function NiveauMax($data)
+	{
+		((int)$data['couleur'] >= (int)$data->crue['valeur']) ? $niveau = $data['couleur'] : $niveau = $data->crue['valeur'];
+		return $niveau;
+	}
+	
+	private function RisqueConcat($risque,$risque_text = "")
+	{
+		if ($this->RisqueConvert($risque) != "")
+		{
+			if (strlen($risque_text) > 0)
+				$risque_text .= ", ".ucfirst($this->RisqueConvert($risque));
+			else
+				$risque_text = ucfirst($this->RisqueConvert($risque));
+		}
+		return $risque_text;
+	}
+	
+	private function RisqueConvert($risque)
+	{
+		$risque = (int)$risque;
+		return $this->RISQUE[$risque];
 	}
 	
 	private function AntillesDataFormat()
@@ -162,8 +199,8 @@ class VigilanceMeteo
 			{
 				$data = explode(" ", trim($line));
 				
-				$dep = $this->ToUTF8("dep_".$this->ConvertDepartmentToNumber($data[0]));
-				$this->DATA[$dep] = array (
+				$this->DEP = $this->ToUTF8("dep_".$this->ConvertDepartmentToNumber($data[0]));
+				$this->DATA[$this->DEP] = array (
 										$this->ToUTF8("niveau") => $this->ToUTF8($this->ConvertColorToLevel($data[1])), 
 										$this->ToUTF8("alerte") => $this->ToUTF8($this->ConvertLevelToColor($this->ConvertColorToLevel($data[1])))
 										);
@@ -171,10 +208,10 @@ class VigilanceMeteo
 		}
 	
 		// Recopie du 978 car m�mes donn�es que le 977
-		$dep = $this->ToUTF8("dep_978");
+		$this->DEP = $this->ToUTF8("dep_978");
 		$dep_ini = $this->ToUTF8("dep_977");
 		$arr = $this->DATA[$dep_ini];
-		$this->DATA[$dep] = $this->DATA[$dep_ini];
+		$this->DATA[$this->DEP] = $this->DATA[$dep_ini];
 		
 		$this->CreateHeader("antilles",$this->GetData($this->METEO_TXT_UPDATE_URL));
 	}

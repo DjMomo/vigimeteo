@@ -7,6 +7,8 @@ https://github.com/DjMomo/vigimeteo
 
 ==========
 
+2014-01-01 - V2.3 - Ajout des risques (pluie-inondation, orages, canicule, avalanches, etc...) aux départements en vigilance orange ou rouge de métropole.
+
 2013-12-21 - V2.2 - Evolution liée à PHP 5.3
 
 2013-12-08 - V2.1 - Etats de vigilance pour les côtes métropolitaines désormais disponibles :
