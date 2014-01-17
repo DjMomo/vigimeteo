@@ -7,7 +7,7 @@ https://github.com/DjMomo/vigimeteo
 
 ==========
 
-2014-01-17 - V2.4 - Ajout des niveaux de vigilance crue pour chaque département de métropole concerné. Balises <crues> </crues> du fichier XML. Niveau de 1 = Vert à 4 = Rouge.
+2014-01-17 - V2.4 - Ajout des niveaux de vigilance crue pour chaque département de métropole concerné. Balises "crues" du fichier XML. Niveau de 1 = Vert à 4 = Rouge.
 
 2014-01-01 - V2.3 - Ajout des risques (pluie-inondation, orages, canicule, avalanches, etc...) aux départements en vigilance orange ou rouge de métropole.
 
