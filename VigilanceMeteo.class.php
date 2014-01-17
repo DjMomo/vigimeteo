@@ -145,16 +145,27 @@ class VigilanceMeteo
 	private function AddData($data)
 	{
 		$NiveauMax = $this->NiveauMax($data);
+
 		if ($NiveauMax > 2) 
 		{
 			$risque = $this->RisqueConcat($data->risque["valeur"], $this->DATA[$this->DEP]["risque"]);
 			if (isset ($data->crue["valeur"]))
 				$risque = $this->RisqueConcat((int)$data->crue["valeur"]+10, $risque);
 		}
-		else		
-			$risque = "RAS"; 
-			
-		$this->DATA[$this->DEP] = array (
+		elseif ($NiveauMax == 2)
+			$risque = "Soyez prudents"; 
+			else
+				$risque = "RAS"; 
+		
+		if ((isset ($data->crue["valeur"])) && 	($data->crue["valeur"]) > 0)
+			$this->DATA[$this->DEP] = array (
+							$this->ToUTF8("niveau") => $this->ToUTF8($NiveauMax), 
+							$this->ToUTF8("alerte") => $this->ToUTF8($this->ConvertLevelToColor($NiveauMax)),
+							$this->ToUTF8("risque") => $this->ToUTF8($risque),
+							$this->ToUTF8("crues")	=> $this->ToUTF8($data->crue["valeur"])
+									);
+		else
+			$this->DATA[$this->DEP] = array (
 							$this->ToUTF8("niveau") => $this->ToUTF8($NiveauMax), 
 							$this->ToUTF8("alerte") => $this->ToUTF8($this->ConvertLevelToColor($NiveauMax)),
 							$this->ToUTF8("risque") => $this->ToUTF8($risque),
