@@ -71,7 +71,12 @@ class VigilanceMeteo
 		if ($file === false)
 			echo $this->OuputEncode();
 		else
-			$this->OutputEncodeXML($file);
+		{
+			if ($this->OutputEncodeXML($file) !== false)
+				echo "Ecriture réussie. Les données sont disponibles dans le fichier $file";
+			else
+				echo "Il y a eu un problème lors de la sauvegarde du fichier $file";
+		}
 	}
 	
 	private function SortAndMergeHeaderAndData()
@@ -292,7 +297,7 @@ class VigilanceMeteo
 		if ($file === false)
 			return $this->DOM->saveXML();
 		else
-			$this->DOM->save($file);
+			return $this->DOM->save($file);
 	}
 	
 	private function OutputEncodeJSON()
