@@ -18,7 +18,10 @@ $fichier = false;
 // Choix entre affichage ou sauvegarde
 $_GET_lower = array_change_key_case($_GET, CASE_LOWER);
 if (isset ($_GET_lower['json']))
+{
 	$format = "json";
+	header('Content-Type: application/json; charset=utf-8');
+}
 elseif (isset ($_GET_lower['xml']))
 	$format = "xml";
 else
