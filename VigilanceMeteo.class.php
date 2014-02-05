@@ -270,7 +270,7 @@ class VigilanceMeteo
 	
 	private function DataSort()
 	{
-		ksort(&$this->DATA);
+		ksort($this->DATA);
 	}
 	
 	private function OuputEncode()
