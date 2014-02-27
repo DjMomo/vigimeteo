@@ -15,7 +15,7 @@ class VigilanceMeteo
 	private $DATA = array();
 	private $HEADER = array();
 	private $UPDATE;
-	private $METEO_XML_DATA_URL;	// M�tropole
+	private $METEO_XML_DATA_URL;	// Métropole
 	private $METEO_TXT_UPDATE_URL;	// Antilles
 	private $METEO_TXT_DATA_URL;	// Antilles
 	private $DOM;
@@ -31,8 +31,7 @@ class VigilanceMeteo
 		$this->METEO_XML_DATA_URL = "http://vigilance.meteofrance.com/data/NXFR34_LFPW_.xml";
 		$this->METEO_TXT_UPDATE_URL = "http://www.meteo.gp/donnees/pics/date_vigi.txt";
 		$this->METEO_TXT_DATA_URL = "http://www.meteo.gp/donnees/pics/RSS_couleurs.txt";
-		$this->METEO_XML_DETAILS_URL = "WXML%DEPT%_LFPW_.xml";//"http://www.vigimeteo.com/data/WXML%DEPT%_LFPW_.xml";
-		
+				
 		$update = $this->ToUTF8("update");
 		$updateval = $this->ToUTF8(date("d-m-Y H:i"));
 		$this->UPDATE[$update] = $updateval;
@@ -45,23 +44,23 @@ class VigilanceMeteo
 	
     private function GetData($url)
 	{
-		// R�cup�re le contenu du fichier source des donn�es
+		// Récupère le contenu du fichier source des données
 		return file_get_contents($url);
 	}
 	
 	public function DonneesVigilance($file = false)
 	{
 		//
-		// Donn�es de m�tropole
+		// Données de Métropole
 		//
 		$this->MetropoleDataFormat();
 		
 		//
-		// Donn�es des Antilles
+		// Données des Antilles
 		//
 		$this->AntillesDataFormat();
 				
-		// Fusion des tableaux d'entete et de donnees
+		// Fusion des tableaux d'entête et de données
 		$this->SortAndMergeHeaderAndData();
 		$root = $this->ToUTF8("vigilance");
 		$arr = $this->DATA;
@@ -81,7 +80,7 @@ class VigilanceMeteo
 	
 	private function SortAndMergeHeaderAndData()
 	{
-		// Fusion des tableaux entete et donn�es apr�s tri du tableau des donn�es
+		// Fusion des tableaux entete et données après tri du tableau des données
 		$this->DataSort();
 		$this->DATA = (array_merge($this->UPDATE,$this->HEADER,$this->DATA));
 	}
@@ -127,7 +126,7 @@ class VigilanceMeteo
 	
 	private function MetropoleDataFormat()
 	{
-		// Lit et met en forme les donn�es pour le format de sortie
+		// Lit et met en forme les données pour le format de sortie
 		$xml = new SimpleXMLElement($this->GetData($this->METEO_XML_DATA_URL));
 		
 		foreach ($xml->datavigilance as $line)
@@ -151,18 +150,21 @@ class VigilanceMeteo
 	{
 		$NiveauMax = $this->NiveauMax($data);
 
+		if (!isset($this->DATA[$this->DEP]["risque"]))
+			$this->DATA[$this->DEP]["risque"] = "";
+		
 		if ($NiveauMax > 2) 
 		{
 			$risque = $this->RisqueConcat($data->risque["valeur"], $this->DATA[$this->DEP]["risque"]);
-			if (isset ($data->crue["valeur"]))
-				$risque = $this->RisqueConcat((int)$data->crue["valeur"]+10, $risque);
+			if ((isset ($data->crue["valeur"])) && (((int)$data->crue["valeur"]) > 2))
+				$risque = $this->RisqueConcat(10, $risque);
 		}
 		elseif ($NiveauMax == 2)
 			$risque = "Soyez prudents"; 
 			else
 				$risque = "RAS"; 
 		
-		if ((isset ($data->crue["valeur"])) && 	($data->crue["valeur"]) > 0)
+		if ((isset ($data->crue["valeur"])) && ($data->crue["valeur"]) > 0)
 			$this->DATA[$this->DEP] = array (
 							$this->ToUTF8("niveau") => $this->ToUTF8($NiveauMax), 
 							$this->ToUTF8("alerte") => $this->ToUTF8($this->ConvertLevelToColor($NiveauMax)),
@@ -185,12 +187,12 @@ class VigilanceMeteo
 	
 	private function RisqueConcat($risque,$risque_text = "")
 	{
-		if ($this->RisqueConvert($risque) != "")
+		if (($risque_libelle = $this->RisqueConvert($risque)) != "")
 		{
 			if (strlen($risque_text) > 0)
-				$risque_text .= ", ".ucfirst($this->RisqueConvert($risque));
+				$risque_text .= ", ".ucfirst($risque_libelle);
 			else
-				$risque_text = ucfirst($this->RisqueConvert($risque));
+				$risque_text = ucfirst($risque_libelle);
 		}
 		return $risque_text;
 	}
@@ -203,11 +205,10 @@ class VigilanceMeteo
 	
 	private function AntillesDataFormat()
 	{
-		// Lit et met en forme les donn�es des Antilles pour le format de sortie
+		// Lit et met en forme les données des Antilles pour le format de sortie
 		$txt = $this->GetData($this->METEO_TXT_DATA_URL);
 		$txt = preg_replace("#( +)#", " ", trim($txt)); // Suppression des espaces inutiles
-		
-		$data = explode(PHP_EOL,$txt);
+		$data = preg_split("/[\n]+/", $txt);
 		
 		foreach ($data as $line)
 		{	
@@ -223,7 +224,7 @@ class VigilanceMeteo
 			}
 		}
 	
-		// Recopie du 978 car m�mes donn�es que le 977
+		// Recopie du 978 car mêmes données que le 977
 		$this->DEP = $this->ToUTF8("dep_978");
 		$dep_ini = $this->ToUTF8("dep_977");
 		$arr = $this->DATA[$dep_ini];
@@ -260,7 +261,7 @@ class VigilanceMeteo
 	
 	private function Filter($data)
 	{
-		// Filtrage des donn�es (depts 99, 2A10, 4010, 3310, etc..) du fichier source de m�tropole
+		// Filtrage des données (depts 99, 2A10, 4010, 3310, etc..) du fichier source de métropole
 		if (((strlen ($data['dep']) == 2) && ($data['dep'] < 96)) || ($data['dep'] == 99)) 
 			return 'dep';
 		if ((strlen($data['dep']) == 4) && (strcasecmp(substr($data['dep'],-2),"10") == 0))
@@ -275,7 +276,7 @@ class VigilanceMeteo
 	
 	private function OuputEncode()
 	{
-		// Fonction qui retourne les donn�es au format choisi
+		// Fonction qui retourne les données au format choisi
 		if (strcasecmp($this->OUTPUT_FORMAT,"XML") == 0)
 			return $this->OutputEncodeXML();		// Format XML
 		
@@ -287,7 +288,7 @@ class VigilanceMeteo
 	
 	private function OutputEncodeXML($file = false)
 	{
-		// Fonction d'encodage en XML � partir de la classe XmlDomConstruct
+		// Fonction d'encodage en XML à partir de la classe XmlDomConstruct
 		$this->DOM = new XmlDomConstruct('1.0', 'utf-8');
 		$this->DOM->formatOutput = true;
 		$comment_elt = $this->DOM->createComment($this->ToUTF8($this->XML_COMMENT));
