@@ -7,7 +7,7 @@ https://github.com/DjMomo/vigimeteo
 
 ==========
 2016-11-20 - V2.7 - Mise à jour mineure :
-- Utilisation du site www.vigimeteo.fr en lieu et place de vigimeteo.meteofrance.fr
+- Utilisation du site www.vigimeteo.com en lieu et place de vigilance.meteofrance.com
 - Désactivation de l'utilisation des données des Antilles (données inaccessibles depuis plusieurs mois)
 
 2014-02-28 - V2.6 - Corrections diverses :
