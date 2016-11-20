@@ -1,7 +1,7 @@
 VigilanceMeteo
 =================
 
-Une classe PHP pour obtenir les niveaux de vigilance météo en France métropolitaine, Antilles et Andorre.
+Une classe PHP pour obtenir les niveaux de vigilance météo en France métropolitaine et Andorre.
 
 https://github.com/DjMomo/vigimeteo
 
