@@ -28,7 +28,7 @@ class VigilanceMeteo
 
 		$this->OUTPUT_FORMAT = $output_format;
 		$this->XML_COMMENT = $entete_XML;
-		$this->METEO_XML_DATA_URL = "http://vigilance.meteofrance.com/data/NXFR34_LFPW_.xml";
+		$this->METEO_XML_DATA_URL = "http://www.vigimeteo.com/data/NXFR34_LFPW_.xml";
 		$this->METEO_TXT_UPDATE_URL = "http://www.meteo.gp/donnees/pics/date_vigi.txt";
 		$this->METEO_TXT_DATA_URL = "http://www.meteo.gp/donnees/pics/RSS_couleurs.txt";
 				
@@ -58,7 +58,7 @@ class VigilanceMeteo
 		//
 		// Données des Antilles
 		//
-		$this->AntillesDataFormat();
+	//	$this->AntillesDataFormat();
 				
 		// Fusion des tableaux d'entête et de données
 		$this->SortAndMergeHeaderAndData();
